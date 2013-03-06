@@ -1,3 +1,4 @@
+require 'rbase/encoder'
 require 'rbase/columns'
 require 'rbase/schema'
 require 'rbase/memo_file'
