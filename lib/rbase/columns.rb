@@ -1,7 +1,5 @@
 module RBase
   module Columns
-    
-    #require 'iconv'
 
     # Base class for all column types
     class Column
@@ -85,20 +83,20 @@ module RBase
         super name, options.merge(:size => size)
 
         if options[:encoding]
-          @unpack_converter = Iconv.new('utf-8', options[:encoding])
-          @pack_converter = Iconv.new(options[:encoding], 'utf-8')
+          @unpack_converter = Encoder.new(options[:encoding], 'utf-8')
+          @pack_converter = Encoder.new('utf-8', options[:encoding])
         end
       end
       
       def pack(value)
-	value = value.to_s
-        value = @pack_converter.iconv(value) if @pack_converter
+	      value = value.to_s
+        value = @pack_converter.en(value) if @pack_converter
         [value].pack("A#{size}")
       end
 
       def unpack(data)
         value = data.rstrip
-        value = @unpack_converter.iconv(value) if @unpack_converter
+        value = @unpack_converter.en(value) if @unpack_converter
         value
       end
 

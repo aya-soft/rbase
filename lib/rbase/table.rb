@@ -182,8 +182,8 @@ module RBase
       @count = header.unpack('@4V').first
       @language = header.unpack('@29c').first
 
-      @record_offset = *header.unpack('@8v')
-      @record_size = *header.unpack('@10v')
+      @record_offset = header.unpack('@8v').first
+      @record_size = header.unpack('@10v').first
 
       @file.pos = 32
 
@@ -210,8 +210,8 @@ module RBase
         @file.pos = @record_offset + @record_size*count
         @file.write record.serialize
         @file.write [26].pack('c')
-        record.instance_variable_set(:@index, count) 
-	self.count += 1
+        record.instance_variable_set(:@index, count)
+        self.count = count + 1
       else
         throw "Index out of bound" if record.index>=count
         @file.pos = @record_offset + @record_size*record.index
